@@ -1,0 +1,99 @@
+﻿ @using (Html.BeginForm()) 
+                    {
+                <fieldset>
+                     <legend align="center" class="pull-left" style="font-size:20px;">Reports - Invoices</legend>
+                    <div class =" row">
+                        <div class="span4" style="float:right">
+                              <div class ="control-group">
+                        <label class="control-label" for="assembly">Payment Status</label>
+                        <div class="controls">
+                             @Html.DevExpress().ComboBox(
+                        settings => {
+                        settings.Name = "payStatus";
+                        settings.Width = 200;
+                        settings.SelectedIndex = 0;
+                        settings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+                        settings.Properties.ClientSideEvents.Init = "function(s,e) {statusInit(s,e); }";
+                        settings.Properties.DropDownStyle = DropDownStyle.DropDownList;
+                        settings.Properties.TextField = "Value";
+                        settings.Properties.ValueField = "Key";
+                        }).BindList(ViewData["PayStatus"]).GetHtml()
+							
+						</div>
+                    </div>
+                    <div class="control-group">
+                        <div class ="controls">
+                            <label class="control-label" for="invoice-date">Invoice Date</label>  
+                            </div>
+                        <div class="controls">
+							<input type="text" style="width:80px" data-date-format="yyyy-mm-dd" data-provide="datepicker" name="invoice-start-date" id="invoice-start-date" required="true" value="">  
+							&nbsp;to&nbsp;
+							<input type="text" style="width:80px" data-date-format="yyyy-mm-dd" data-provide="datepicker" name="invoice-end-date" id="invoice-end-date" required="true" value="">
+							&nbsp;&nbsp;
+                        </div>
+                    </div>
+                    </div>
+                    <div class="span6">
+                   
+
+                    <div class ="control-group">
+                        <label class="control-label" for="assembly">Assembly</label>
+                        <div class="controls">
+                             @Html.DevExpress().ComboBox(
+                        settings => {
+                        settings.Name = "assembly";
+                        settings.Width = 200;
+                        settings.SelectedIndex = 0;
+                        settings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+                        settings.Properties.DropDownStyle = DropDownStyle.DropDownList;
+                        settings.Properties.TextField = "Text";
+                        settings.Properties.ValueField = "Value";
+                        settings.Properties.ClientSideEvents.SelectedIndexChanged = "function(s, e) { unit.PerformCallback(); }";
+                        settings.Properties.ClientSideEvents.Init = "function(s,e) {assemblyInit(s,e); }";
+                        //settings.Properties.ClientSideEvents.EndCallback = @"function(s,e) {  s.SetValue(""ALL""); }";
+                        settings.Properties.NullDisplayText = "--SELECT--";
+                        //settings.Properties.ClientSideEvents.Init = "GetMaterialsByCategory";
+                       
+                        }).BindList(ViewData["Assemblies"]).GetHtml()
+							
+						</div>
+                    </div>
+                    <div class="control-group"> 
+		    			<label class="control-label" for="unit">Unit</label>   
+						<div class="controls">
+                            @{
+                                var unitModel = new List<SelectListItem>();
+                            }
+                            @Html.Partial("_unitsPartial",unitModel)
+		      				@*<select name="unit_name" required="true" style="width: 250px;"> 
+								<option value="all">All</option>
+							</select>*@
+		    		  	</div>
+      				</div>
+                    <div class="control-group"> 
+		    			<label class="control-label" for="consultant">Consultant</label>   
+						<div class="controls">
+                            @{
+                                var consultntModel = new List<SelectListItem>();
+                            }
+                            @Html.Partial("_consultantPartial",consultntModel)
+                           
+                            <br />
+		      				
+                            @Html.DevExpress().Button(s =>
+                           {
+                               s.Name = "Submit";
+                               s.Text = "Submit";
+                               s.Width = 120;
+                               //s.EnableClientSideAPI = true;
+                               s.ClientSideEvents.Click = "function(s, e) { FilterGrid('" + @Url.Action("AddInternalReq", "InternalReq") + "')}";
+                               
+                           }).GetHtml()
+		    		  	</div>
+      				</div>
+                  </div>
+                    
+                 </div>
+                </fieldset>
+            }
+         

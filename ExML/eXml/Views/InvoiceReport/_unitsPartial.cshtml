@@ -1,0 +1,24 @@
+﻿@using eXml.Models
+@model List<SelectListItem>
+
+@Html.DevExpress().ComboBox(
+                        settings => {
+                        settings.Name = "unit";
+                        settings.Width = 200;
+                        settings.SelectedIndex = 0;
+                        //settings.Properties.EnableCallbackMode = true;
+                        settings.CallbackRouteValues = new { Controller = "InvoiceReport", Action = "_GetAssemblyUnits" };
+                        settings.Properties.ClientSideEvents.BeginCallback = @"function(s, e) { e.customArgs['assembly'] = assembly.GetValue(); }";
+                        settings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+                        settings.Properties.DropDownStyle = DropDownStyle.DropDownList;
+                        //settings.Properties.TextFormatString = "{1} {2}";
+                        settings.Properties.TextField = "Text";
+                        settings.Properties.ValueField = "Value";
+                        settings.Properties.ValueType = typeof(string);
+                        settings.Properties.ClientSideEvents.SelectedIndexChanged = "function(s, e) { consultant.PerformCallback(); }";
+                        settings.Properties.ClientSideEvents.Init = "function(s,e) { unitInit(s,e); }";
+                        //settings.Properties.Columns.Add("EmployeeNo", "EmpNo", 80);
+                        //settings.Properties.Columns.Add("FirstName", "FirstName", 100);
+                        //settings.Properties.Columns.Add("LastName", "LastName", 100);
+                        //settings.Properties.ClientSideEvents.SelectedIndexChanged = "GetUnit";
+                        }).BindList(Model).GetHtml()

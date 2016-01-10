@@ -1,0 +1,9 @@
+﻿@Html.DevExpress().CallbackPanel(
+	settings => {
+		settings.Name = "CallbackPanel";
+		settings.CallbackRouteValues = new { Controller = "UploadControl", Action = "UploadFile" };
+		settings.SettingsLoadingPanel.Enabled = false;
+		settings.ClientSideEvents.BeginCallback = "function(s, e) { LoadingPanel.Show(); }";
+		settings.ClientSideEvents.EndCallback = "function(s, e) { LoadingPanel.Hide(); }";
+	}
+).GetHtml()

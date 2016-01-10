@@ -1,0 +1,108 @@
+﻿@Html.DevExpress().PopupControl(
+    settings =>
+    {
+        settings.Name = "pcModalMode";
+        settings.Width = 100;
+        settings.AllowDragging = true;
+        settings.CloseAction = CloseAction.CloseButton;
+        settings.CloseOnEscape = true;
+        settings.PopupAnimationType = AnimationType.None;
+        settings.HeaderText = "Login";
+        settings.Modal = true;
+        settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SetContent(() =>
+        {
+            using (Html.BeginForm("PaymentUpdate", "Invoices", FormMethod.Post, new { id = "popupForm", @class = "edit_form", @style = "width: 260px" })){
+                Html.Hidden("Id");
+                ViewContext.Writer.Write("<div class=\"line\">");
+                Html.DevExpress().Label(
+                    labelSettings => {
+                        labelSettings.ControlStyle.CssClass = "label";
+                        labelSettings.Text = "Payment Type:";
+                        labelSettings.AssociatedControlName = "Username";
+                    }
+                )
+                .Render();
+                Html.DevExpress().ComboBox(cSettings =>
+                    {
+                        cSettings.Name = "PayType";
+                        cSettings.Properties.TextField = "Value";
+                        cSettings.Properties.TextField = "Key";
+                       
+                    }).BindList(ViewData["PayType"]).Render();
+                //Html.DevExpress().TextBox(
+                //    textBoxSettings => {
+                //        textBoxSettings.Name = "Username";
+                //        textBoxSettings.ControlStyle.CssClass = "editor";
+                //    }
+                //)
+                //.Render();
+                ViewContext.Writer.Write( "</div><div class=\"line\">");
+                Html.DevExpress().Label(
+                    labelSettings => {
+                        labelSettings.ControlStyle.CssClass = "label";
+                        labelSettings.Text = "Payment Amount:";
+                        labelSettings.AssociatedControlName = "Amount";
+                    }
+                )
+                .Render();
+                Html.DevExpress().TextBox(
+                    textBoxSettings => {
+                        textBoxSettings.Name = "Amt";
+                        textBoxSettings.ControlStyle.CssClass = "editor";
+                    }
+                )
+                .Render();
+                ViewContext.Writer.Write( "</div><div class=\"line\">" );
+                ViewContext.Writer.Write("</div><div class=\"line\">");
+                Html.DevExpress().Label(
+                    labelSettings =>
+                    {
+                        labelSettings.ControlStyle.CssClass = "label";
+                        labelSettings.Text = "Payment Date:";
+                        labelSettings.AssociatedControlName = "Amount";
+                    }
+                )
+                .Render();
+                Html.DevExpress().DateEdit(
+                    dtSettings =>
+                    {
+                        dtSettings.Name = "pDate";
+                        dtSettings.ControlStyle.CssClass = "editor";
+                    }
+                )
+                .Render();
+                ViewContext.Writer.Write("</div><div class=\"line\">");
+                Html.DevExpress().Label(
+                    labelSettings => {
+                        labelSettings.ControlStyle.CssClass = "label";
+                    }
+                )
+                .Render();
+                Html.DevExpress().Button(
+                    buttonSettings => {
+                        buttonSettings.Name = "btnUpdate";
+                        buttonSettings.ControlStyle.CssClass = "button";
+                        buttonSettings.Width = 80;
+                        buttonSettings.Text = "OK";
+                        buttonSettings.UseSubmitBehavior = true;
+                    }
+                )
+                .Render();
+                Html.DevExpress().Button(
+                    buttonSettings => {
+                        buttonSettings.Name = "btnCancel";
+                        buttonSettings.ControlStyle.CssClass = "button";
+                        buttonSettings.Width = 80;
+                        buttonSettings.Text = "Cancel";
+                        buttonSettings.ClientSideEvents.Click = "function(s, e){ pcModalMode.Hide(); }";
+                    }
+                )
+                .Render();
+                ViewContext.Writer.Write("</div><b class=\"Clear\"></b>");
+            }
+        });
+
+        settings.ClientSideEvents.CloseUp = "function(s, e){ ASPxClientEdit.ClearEditorsInContainer(null, '', true); }";
+    }).GetHtml()

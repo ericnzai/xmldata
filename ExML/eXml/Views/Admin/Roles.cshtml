@@ -1,0 +1,9 @@
+﻿@using eXml.Models
+@model List<RoleModel>
+<div class ="content">
+       <div  id ="grid">
+           @using (Html.BeginForm()){
+            @Html.Partial("_GridListRoles",Model)
+           }
+       </div>
+   </div>

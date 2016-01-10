@@ -1,0 +1,211 @@
+﻿@*@using eXml.Helpers
+@{
+    Html.DevExpress().GetScripts(new Script { ExtensionSuite = ExtensionSuite.GridView });
+    Html.DevExpress().GetStyleSheets(new StyleSheet { ExtensionSuite = ExtensionSuite.GridView });
+    Html.AddJavaScript(Url.Content("~/Scripts/invoices.js"));
+    //var strngScript =
+    //Html.AddJavaScript(strngScript.ToHtmlString());
+   
+}*@
+@{
+    var grid = Html.DevExpress().GridView(
+       settings =>
+       {
+           settings.Name = "gvInv";
+           settings.CallbackRouteValues = new { Controller = "Invoices", Action = "_GridListInvoices" };
+           settings.ClientSideEvents.BeginCallback = @"function(s, e) { SetGridCustomArgs(s,e) }";
+           settings.KeyFieldName = "Id";
+           settings.Width = Unit.Percentage(100);
+           settings.Height = 400;
+           
+           settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+           settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Invoices", Action = "PaymentUpdate" };
+           settings.CommandColumn.Visible = true;
+           settings.CommandColumn.ShowSelectCheckbox = true;
+           settings.CommandColumn.ShowEditButton = true;
+           settings.ClientSideEvents.SelectionChanged = "function(s,e) {OnSelectionChanged(s,e)}";
+           
+           settings.CommandColumn.Width = 60;
+
+           //settings.Settings.HorizontalScrollBarMode = ScrollBarMode.Visible;
+           settings.Settings.VerticalScrollBarMode = ScrollBarMode.Visible;
+           settings.SettingsBehavior.AllowFocusedRow = true;
+           settings.SettingsBehavior.AllowSelectSingleRowOnly = false;
+          
+
+           //settings.Columns.Add(columnCheckNullable =>
+           //{
+           //    columnCheckNullable.FieldName = "#";
+           //    columnCheckNullable.ColumnType = MVCxGridViewColumnType.CheckBox;
+           //    columnCheckNullable.UnboundType = DevExpress.Data.UnboundColumnType.Boolean;
+           //    columnCheckNullable.Width = 30;
+               
+           //});
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "AssemblyName";
+               column.Caption = "Assembly";
+               column.Width = 100;
+           });
+
+           settings.Columns.Add(column =>
+               {
+                   column.FieldName = "UnitName";
+                   column.Width = 70;
+               });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "YrWk";
+               column.Width = 70;
+           });
+          
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "Consultant";
+               column.Width = 200;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "InvoiceNo";
+               column.Width = 70;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "TotalAmount";
+               column.Caption = "Total Amt";
+               column.Width = 80;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "PendingAmount";
+               column.Caption = "Pending Amt";
+               column.Width = 80;
+           });
+           //settings.Columns.Add("N");
+
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "InvoiceDate";
+               column.Caption = "Invoice Date";
+               column.PropertiesEdit.DisplayFormatString = "yyyy-MM-dd";
+               column.Width = 90;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "PaymentDate";
+               column.Caption = "Payment Date";
+               column.PropertiesEdit.DisplayFormatString = "yyyy-MM-dd";
+               column.Width = 90;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "PaymentType";
+               column.Caption = "Payment Type";
+               column.Width = 70;
+               column.ColumnType = MVCxGridViewColumnType.ComboBox;
+               var cboProps = column.PropertiesEdit as ComboBoxProperties;
+               cboProps.DataSource = ViewData["PayType"];
+               cboProps.TextField = "Value";
+               cboProps.ValueField = "Key";
+               cboProps.ValueType = typeof(int);
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "PaymentAmount";
+               column.Width = 80;
+               column.Caption = "Pay Amt";
+           });
+           settings.SetEditFormTemplateContent(c =>
+               {
+                   Html.DevExpress().FormLayout(formSettings =>
+                       {
+                           formSettings.Name = "PaymentUpdate";
+                           formSettings.ColCount = 2;
+                           formSettings.Width = Unit.Percentage(100);
+                           formSettings.Items.Add(i =>
+                           {
+                               i.FieldName = "PaymentType";
+                               i.NestedExtension().ComboBox(s =>
+                               {
+                                   s.Properties.TextField = "Value";
+                                   s.Properties.ValueField = "Key";
+                                   s.Properties.ValueType = typeof(int);
+                                   s.Properties.DataSource = ViewData["PayType"];
+                                   s.Width = Unit.Percentage(100);
+                               });
+                           });
+                           formSettings.Items.Add(i =>
+                           {
+                               i.FieldName = "PaymentAmount";
+                               i.Caption = "Amount";
+                               i.NestedExtension().TextBox(s =>
+                               {
+                                   s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithTooltip;
+                                   s.ShowModelErrors = true;
+                                   s.Width = Unit.Percentage(100);
+                               });
+                           });
+                           formSettings.Items.Add(i =>
+                            {
+                                i.FieldName = "PaymentDate";
+                                i.Caption = "Date";
+                                i.NestedExtension().DateEdit(s =>
+                                {
+                                    s.Properties.AllowMouseWheel = true;
+                                    s.Properties.DisplayFormatString = "yyyy-MM-dd";
+                                });
+                            });
+                           formSettings.Items.Add(i =>
+                           {
+                               i.FieldName = "ChequeNo";
+                               i.Caption = "Cheque #";
+                               i.NestedExtension().TextBox(s =>
+                               {
+                                   s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithTooltip;
+                                   s.ShowModelErrors = true;
+                                   s.Width = Unit.Percentage(100);
+                               });
+                           });
+                           formSettings.Items.Add(i =>
+                           {
+                               i.FieldName = "BankName";
+                               i.Caption = "Bank Name";
+                               i.NestedExtension().TextBox(s =>
+                               {
+                                   s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithTooltip;
+                                   s.ShowModelErrors = true;
+                                   s.Width = Unit.Percentage(100);
+                               });
+                           });
+                           formSettings.Items.Add(i =>
+                           {
+                               i.ShowCaption = DefaultBoolean.False;
+                           }).SetNestedContent(() =>
+                           {
+                               ViewContext.Writer.Write("<div style='float:right'>");
+                               Html.DevExpress().Button(
+                                   btnSettings =>
+                                   {
+                                       btnSettings.Name = "btnUpdate";
+                                       btnSettings.Text = "Update";
+                                       btnSettings.ClientSideEvents.Click = "function(s, e){ gvInv.UpdateEdit(); }";
+                                   }).Render();
+                               Html.DevExpress().Button(
+                                   btnSettings =>
+                                   {
+                                       btnSettings.Name = "btnCancel";
+                                       btnSettings.Text = "Cancel";
+                                       btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
+                                       btnSettings.ClientSideEvents.Click = "function(s, e){ gvInv.CancelEdit(); }";
+                                   }).Render();
+                               ViewContext.Writer.Write("</div>");
+                           });
+                       }).Bind(ViewData["PostedTrans"] ?? c.DataItem).Render();
+               });
+       });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+    }
+    @grid.Bind(Model).GetHtml()

@@ -1,0 +1,88 @@
+﻿@{ 
+var grid = Html.DevExpress().GridView(
+       settings =>
+       {
+           settings.Name = "gvPayRep";
+           settings.CallbackRouteValues = new { Controller = "PaymentReport", Action = "_GridListPaymentsReport" };
+           settings.ClientSideEvents.BeginCallback = @"function(s, e) { SetGridCustomArgs(s,e) }";
+           settings.KeyFieldName = "Id";
+           settings.Width = Unit.Percentage(100);
+           settings.Height = 400;
+
+           //settings.Settings.HorizontalScrollBarMode = ScrollBarMode.Visible;
+           settings.Settings.VerticalScrollBarMode = ScrollBarMode.Visible;
+           //settings.SettingsBehavior.AllowSelectSingleRowOnly = true;
+           settings.SettingsBehavior.AllowFocusedRow = true;
+           //settings.SettingsBehavior.AllowSelectSingleRowOnly = true;
+          
+
+           //settings.Columns.Add(columnCheckNullable =>
+           //{
+           //    columnCheckNullable.FieldName = "#";
+           //    columnCheckNullable.ColumnType = MVCxGridViewColumnType.CheckBox;
+           //    columnCheckNullable.UnboundType = DevExpress.Data.UnboundColumnType.Boolean;
+           //    columnCheckNullable.Width = 30;
+               
+           //});
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "AssemblyName";
+               column.Caption = "Assembly";
+               column.Width = 100;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "UnitName";
+               column.Caption = "Unit";
+               column.Width = 80;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "YrWk";
+               column.Caption = "Year-Week";
+               column.Width = 100;
+           });
+
+           //settings.Columns.Add(column =>
+           //    {
+           //        column.FieldName = "InvoiceNo";
+           //        column.Width = 70;
+           //    });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "Consultant";
+               column.Caption = "Consultant Name /Code";
+               column.Width = 240;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "PaymentAmount";
+               column.Width = 120;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "PendingAmount";
+               column.Width = 120;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "Type";
+               column.Caption = "Type";
+               column.Width = 100;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "Status";
+               column.Caption = "Payment Status";
+               column.Width = 100;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "PaymentDate";
+               column.Caption = "Payment Date";
+               column.Width = 100;
+           });
+   
+       });
+    }
+    @grid.Bind(Model).GetHtml()

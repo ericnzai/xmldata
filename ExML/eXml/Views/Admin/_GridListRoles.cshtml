@@ -1,0 +1,124 @@
+﻿@{  
+var grid = Html.DevExpress().GridView(
+       settings =>
+       {
+           settings.Name = "gvRoles";
+           settings.CallbackRouteValues = new { Controller = "Admin", Action = "_GridListRoles" };
+           //settings.ClientSideEvents.BeginCallback = @"function(s, e) { SetGridCustomArgs(s,e) }";
+           settings.KeyFieldName = "RoleId";
+           settings.Width = Unit.Percentage(100);
+           settings.Height = 600;
+           
+           settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+           settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Admin", Action = "UpdateRole" };
+           settings.SettingsEditing.AddNewRowRouteValues = new {Controller = "Admin", Action = "AddRole" } ;
+           settings.CommandColumn.Visible = true;
+           settings.CommandColumn.ShowNewButtonInHeader = true;
+           settings.CommandColumn.ShowEditButton = true;
+           settings.CommandColumn.Width = 60;
+
+           //settings.Settings.HorizontalScrollBarMode = ScrollBarMode.Visible;
+           settings.Settings.VerticalScrollBarMode = ScrollBarMode.Visible;
+           settings.SettingsBehavior.AllowSelectSingleRowOnly = true;
+           settings.SettingsBehavior.AllowFocusedRow = true;
+           settings.SettingsBehavior.AllowSelectSingleRowOnly = true;
+         
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "RoleId";
+               column.Caption = "Role Id";
+               column.Width = 100;
+           });
+
+           settings.Columns.Add(column =>
+               {
+                   column.FieldName = "RoleName";
+                   column.Width = 200;
+               });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "RoleType";
+               column.Caption = "Role Type";
+               column.Width = 70;
+               column.ColumnType = MVCxGridViewColumnType.ComboBox;
+               var cboProps = column.PropertiesEdit as ComboBoxProperties;
+               cboProps.DataSource = ViewData["RoleType"];
+               cboProps.TextField = "Value";
+               cboProps.ValueField = "Key";
+               cboProps.ValueType = typeof(int);
+           });
+
+           settings.Columns.Add(column =>
+           {
+               column.Caption = "Action";
+               column.SetDataItemTemplateContent(c =>
+               {
+                   ViewContext.Writer.Write(
+                       Html.ActionLink("Role Permissions", "SetPermissions", new { UserId = DataBinder.Eval(c.DataItem, "RoleId")})
+                       );
+               });
+               column.Width = 120;
+           });
+           settings.SetEditFormTemplateContent(c =>
+               {
+                   Html.DevExpress().FormLayout(formSettings =>
+                       {
+                           formSettings.Name = "roleUpdate";
+                           formSettings.ColCount = 2;
+                           formSettings.Width = Unit.Percentage(100);
+                         
+                           formSettings.Items.Add(i =>
+                           {
+                               i.FieldName = "RoleName";
+                               i.Caption = "Role Name";
+                               i.NestedExtension().TextBox(s =>
+                               {
+                                   s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithTooltip;
+                                   s.ShowModelErrors = true;
+                                   s.Width = Unit.Percentage(100);
+                               });
+                           });
+                           formSettings.Items.Add(i =>
+                           {
+                               i.FieldName = "RoleType";
+                               i.NestedExtension().ComboBox(s =>
+                               {
+                                   s.Properties.TextField = "Value";
+                                   s.Properties.ValueField = "Key";
+                                   s.Properties.ValueType = typeof(int);
+                                   s.Properties.DataSource = ViewData["RoleType"];
+                                   s.Width = Unit.Percentage(100);
+                               });
+                           });
+                           formSettings.Items.Add(i =>
+                           {
+                               i.ShowCaption = DefaultBoolean.False;
+                           }).SetNestedContent(() =>
+                           {
+                               ViewContext.Writer.Write("<div style='float:right'>");
+                               Html.DevExpress().Button(
+                                   btnSettings =>
+                                   {
+                                       btnSettings.Name = "btnUpdate";
+                                       btnSettings.Text = "Update";
+                                       btnSettings.ClientSideEvents.Click = "function(s, e){ gvRoles.UpdateEdit(); }";
+                                   }).Render();
+                               Html.DevExpress().Button(
+                                   btnSettings =>
+                                   {
+                                       btnSettings.Name = "btnCancel";
+                                       btnSettings.Text = "Cancel";
+                                       btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
+                                       btnSettings.ClientSideEvents.Click = "function(s, e){ gvRoles.CancelEdit(); }";
+                                   }).Render();
+                               ViewContext.Writer.Write("</div>");
+                           });
+                       }).Bind(ViewData["Role"] ?? c.DataItem).Render();
+               });
+       });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+    }
+    @grid.Bind(Model).GetHtml()

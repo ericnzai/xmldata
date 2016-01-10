@@ -1,0 +1,157 @@
+﻿@{  
+var grid = Html.DevExpress().GridView(
+       settings =>
+       {
+           settings.Name = "gvUsers";
+           settings.CallbackRouteValues = new { Controller = "Admin", Action = "_GridListUsers" };
+           //settings.ClientSideEvents.BeginCallback = @"function(s, e) { SetGridCustomArgs(s,e) }";
+           settings.KeyFieldName = "UserId";
+           settings.Width = Unit.Percentage(100);
+           settings.Height = 600;
+           
+           settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+           settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Admin", Action = "UpdateUser" };
+           settings.SettingsEditing.AddNewRowRouteValues = new {Controller = "Admin", Action = "AddUser" } ;
+           settings.CommandColumn.Visible = true;
+           settings.CommandColumn.ShowNewButtonInHeader = true;
+           settings.CommandColumn.ShowEditButton = true;
+           settings.CommandColumn.Width = 60;
+
+           //settings.Settings.HorizontalScrollBarMode = ScrollBarMode.Visible;
+           settings.Settings.VerticalScrollBarMode = ScrollBarMode.Visible;
+           settings.SettingsBehavior.AllowSelectSingleRowOnly = true;
+           settings.SettingsBehavior.AllowFocusedRow = true;
+           settings.SettingsBehavior.AllowSelectSingleRowOnly = true;
+         
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "UserId";
+               column.Caption = "User Id";
+               column.Width = 100;
+           });
+
+           settings.Columns.Add(column =>
+               {
+                   column.FieldName = "Email";
+                   column.Width = 200;
+               });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "IsLicensed";
+               column.Width = 100;
+           });
+          
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "ExpiryDate";
+               column.Width = 200;
+           });
+
+           settings.Columns.Add(column =>
+           {
+               column.Caption = "Action";
+               column.SetDataItemTemplateContent(c =>
+               {
+                   ViewContext.Writer.Write(
+                       Html.ActionLink("User Roles", "SetRole", new { UserId = DataBinder.Eval(c.DataItem, "UserId")})
+                       );
+               });
+               column.Width = 120;
+           });
+           settings.SetEditFormTemplateContent(c =>
+               {
+                   Html.DevExpress().FormLayout(formSettings =>
+                       {
+                           formSettings.Name = "userUpdate";
+                           formSettings.ColCount = 2;
+                           formSettings.Width = Unit.Percentage(100);
+                         
+                           formSettings.Items.Add(i =>
+                           {
+                               i.FieldName = "Email";
+                               i.Caption = "Email";
+                               i.NestedExtension().TextBox(s =>
+                               {
+                                   s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithTooltip;
+                                   s.ShowModelErrors = true;
+                                   s.Width = Unit.Percentage(100);
+                               });
+                           });
+                           formSettings.Items.Add(i =>
+                           {
+                               i.FieldName = "Password";
+                               i.Caption = "Password";
+                               i.NestedExtension().TextBox(s =>
+                               {
+                                   s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithTooltip;
+                                   s.ShowModelErrors = true;
+                                   s.Properties.Password = true;
+                                   s.Width = Unit.Percentage(100);
+                               });
+                           });
+                           formSettings.Items.Add(i =>
+                            {
+                                i.FieldName = "ExpiryDate";
+                                i.Caption = "Expiry Date";
+                                i.NestedExtension().DateEdit(s =>
+                                {
+                                    s.Properties.AllowMouseWheel = true;
+                                    s.Properties.DisplayFormatString = "dd-MM-yyyy";
+                                });
+                            });
+                           
+                           formSettings.Items.Add(i =>
+                           {
+                               i.FieldName = "ConfirmPassword";
+                               i.Caption = "Confirm Password";
+                               i.NestedExtension().TextBox(s =>
+                               {
+                                   s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithTooltip;
+                                   s.ShowModelErrors = true;
+                                   s.Properties.Password = true;
+                                   s.Width = Unit.Percentage(100);
+                               });
+                           });
+                           formSettings.Items.Add(i =>
+                            {
+                                i.FieldName = "IsLicensed";
+                                i.Caption = "Is Licensed?";
+                                i.NestedExtension().CheckBox(s =>
+                                {
+                                    s.ShowModelErrors = true;
+                                    //s.Checked = false;
+                                    s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithTooltip;
+                                });
+                            });
+                           formSettings.Items.Add(i =>
+                           {
+                               i.ShowCaption = DefaultBoolean.False;
+                           }).SetNestedContent(() =>
+                           {
+                               ViewContext.Writer.Write("<div style='float:right'>");
+                               Html.DevExpress().Button(
+                                   btnSettings =>
+                                   {
+                                       btnSettings.Name = "btnUpdate";
+                                       btnSettings.Text = "Update";
+                                       btnSettings.ClientSideEvents.Click = "function(s, e){ gvUsers.UpdateEdit(); }";
+                                   }).Render();
+                               Html.DevExpress().Button(
+                                   btnSettings =>
+                                   {
+                                       btnSettings.Name = "btnCancel";
+                                       btnSettings.Text = "Cancel";
+                                       btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
+                                       btnSettings.ClientSideEvents.Click = "function(s, e){ gvUsers.CancelEdit(); }";
+                                   }).Render();
+                               ViewContext.Writer.Write("</div>");
+                           });
+                       }).Bind(ViewData["User"] ?? c.DataItem).Render();
+               });
+       });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+    }
+    @grid.Bind(Model).GetHtml()

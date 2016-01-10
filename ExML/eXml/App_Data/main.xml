@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mainmenu>
+  <item Text="Home" NavigateUrl="~\\UploadControl\\UploadFile" ImageUrl="~\\Content\\Images\\SpreadsheetNumbers24.png" Role="NormalUser"/>
+  <item Text="Reports" NavigateUrl="~\\InvoiceReport\\InvReport" ImageUrl="~\\Content\\Images\\ReportWithChart24.png" Role="NormalUser"/>
+  <item Text="Payments" NavigateUrl="~\\PaymentReport\\Report" ImageUrl="~\\Content\\Images\\CashRegister24.png" Role="NormalUser"/>
+  <item Text="Invoices" NavigateUrl="~\\Invoices\\Invoice" ImageUrl="~\\Content\\Images\\Receipt24.png" Role="NormalUser"/>
+  <item Text="Kit" NavigateUrl="~\\UploadControl\\UploadFile" ImageUrl="~\\Content\\Images\\ShoppingBag24.png" Role="NormalUser"/>
+  <item Text="Inventory" NavigateUrl="~\\InventoryReport\\Report" ImageUrl="~\\Content\\Images\\Barcode24.png" Role="NormalUser"/>
+  <item Text="Administrator"  Role="Admin" ImageUrl ="~\\Content\\Images\\Admin24.png">
+    <item Text="Manage Users" NavigateUrl="~\\Admin\\Users" ImageUrl="~\\Content\\Images\\User24.png"/>
+    <item Text="Manage Roles" NavigateUrl="~\\Admin\\Roles" ImageUrl="~\\Content\\Images\\UserConfigure24.png"/>
+  </item>
+</mainmenu>
+ 
+
+

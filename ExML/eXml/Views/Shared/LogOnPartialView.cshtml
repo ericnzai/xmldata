@@ -1,0 +1,30 @@
+@if(!Request.IsAuthenticated) {
+    @: | 
+    @Html.ActionLink("Login", "Index", "Home")
+    @: |
+}
+else {
+    @: Welcome <b>@User.Identity.Name</b>!
+    @: |
+    @Html.ActionLink("Logout", "LogOff", "Home") <br />
+    @: |
+    @Html.ActionLink("Change Password","ChangePassword","Home")
+    @: |
+}
+@*@using eXml.Models
+<div class="loginControl">
+    @if (Request.IsAuthenticated && (User as CustomPrincipal) != null)
+    {
+        @: Welcome <b>@((User as CustomPrincipal).Email) </b>
+        @: |
+        @: @Html.ActionLink("Logout", "LogOff", "Home")
+        @: |
+        @: @Html.ActionLink("Change Password", "ChangePassword", "Home")
+        @: @Html.Hidden("UserId",(User as CustomPrincipal).Id)
+    }
+    else {
+        @Html.ActionLink("Register", "#", "Home") 
+        @: | 
+        @Html.ActionLink("Login", "Index", "Home")
+    }
+</div>*@

@@ -1,0 +1,35 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+<h2>Error</h2>
+<hr/>
+
+<div style="min-height: 400px;">
+    <div>
+    <p style="color:red"> An unexpected error has occurred. Please contact the system administrator.!</p>
+    </div>
+    <br />
+    <br />
+    <div>
+         @if (Model != null && HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div>
+            <p>
+                <b>Exception:</b> @Model.Exception.Message<br />
+                <b>Controller:</b> @Model.ControllerName<br />
+                <b>Action:</b> @Model.ActionName
+            </p>
+            <div style="overflow:scroll">
+                <pre>
+                    @Model.Exception.StackTrace
+                </pre>
+            </div>
+        </div>
+    }
+    </div>
+    <button onclick="Error_goBack()" class="k-button">Go Back</button>
+    <script>
+        function Error_goBack() {
+            window.history.back()
+        }
+    </script>
+
+</div>

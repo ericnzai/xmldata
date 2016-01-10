@@ -1,0 +1,85 @@
+﻿
+  @using (Html.BeginForm()) 
+                    {
+                <fieldset>
+                    <legend align="center" class="pull-left" style="font-size:20px;">Invoices</legend>
+                    <div class ="control-group">
+                        <label class="control-label" for="assembly">Assembly</label>
+                        <div class="controls">
+                             @Html.DevExpress().ComboBox(
+                        settings => {
+                        settings.Name = "assembly";
+                        settings.Width = 200;
+                        settings.SelectedIndex = 0;
+                        settings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+                        settings.Properties.DropDownStyle = DropDownStyle.DropDownList;
+                        settings.Properties.TextField = "Text";
+                        settings.Properties.ValueField = "Value";
+                        settings.Properties.ClientSideEvents.SelectedIndexChanged = "function(s, e) { unit.PerformCallback(); }";
+                        settings.Properties.ClientSideEvents.Init = "function(s,e) {assemblyInit(s,e); }";
+                        settings.Properties.NullDisplayText = "--SELECT--";
+                        //settings.Properties.ClientSideEvents.Init = "GetMaterialsByCategory";
+                       
+                        }).BindList(ViewData["Assemblies"]).GetHtml()
+							@*<select class="assembly" name="assembly" required="true" style="width: 150px;">  onchange="this.form.submit()"
+								<option value="">--SELECT--</option>
+								<option value="all">All</option>
+								<option value="Andheri W Link Road">Andheri W Link Road</option>	
+								<option value="Dadar West">Dadar West</option>	
+								<option value="Dombivli East">Dombivli East</option>	
+								<option value="Dombivli West">Dombivli West</option>	
+								<option value="From Year :">From Year :</option>	
+								<option value="Ghatkopar East West">Ghatkopar East West</option>	
+								<option value="Goregaon East">Goregaon East</option>	
+								<option value="Goregaon West">Goregaon West</option>	
+								<option value="Jogeshwari West">Jogeshwari West</option>	
+								<option value="Juhu West">Juhu West</option>	
+								<option value="Khar West">Khar West</option>	
+								<option value="Mira Road Sheetal  Nagar">Mira Road Sheetal  Nagar</option>	
+								<option value="Powai I I T">Powai I I T</option>	
+								<option value="Powai Raheja">Powai Raheja</option>	
+								<option value="Santacruz East">Santacruz East</option>	
+								<option value="Santacruz West">Santacruz West</option>	
+								<option value="Thane Lake City Mall">Thane Lake City Mall</option>	
+								<option value="Thane Makhmali Talao">Thane Makhmali Talao</option>	
+								<option value="Ulhasnagar Waghmare Hall">Ulhasnagar Waghmare Hall</option>	
+								<option value="Vikhroli East">Vikhroli East</option>	
+								<option value="Vile Parle East">Vile Parle East</option>	
+								<option value="YARI ROAD">YARI ROAD</option>	
+							</select>*@
+						</div>
+                    </div>
+                    <div class="control-group"> 
+		    			<label class="control-label" for="unit_name">Unit</label>   
+						<div class="controls">
+                            @{
+                                var unitModel = new List<SelectListItem>();
+                            }
+                            @Html.Partial("_unitsPartial",unitModel)
+		      				@*<select name="unit_name" required="true" style="width: 250px;"> 
+								<option value="all">All</option>
+							</select>*@
+		    		  	</div>
+      				</div>
+                    <div class="control-group">
+                        <label class="control-label" for="invoice-date">Invoice Date</label>  
+                        <div class="controls">
+							<input type="text" style="width:80px" data-date-format="yyyy-mm-dd" data-provide="datepicker" name="invoice-start-date" id="invoice-start-date" required="true" value="2015-10-08">  
+							&nbsp;to&nbsp;
+							<input type="text" style="width:80px" data-date-format="yyyy-mm-dd" data-provide="datepicker" name="invoice-end-date" id="invoice-end-date" required="true" value="2015-10-08">
+							&nbsp;&nbsp;
+							@*<button id ="btnSubmit" type="submit" name="Submit" onclick="function(s, e) { FilterGrid('" + @Url.Action("AddInternalReq", "InternalReq") + "')}">Submit</button>*@
+                            @Html.DevExpress().Button(s =>
+                           {
+                               s.Name = "Submit";
+                               s.Text = "Submit";
+                               s.Width = 120;
+                               //s.EnableClientSideAPI = true;
+                               s.ClientSideEvents.Click = "function(s, e) { FilterGrid('" + @Url.Action("AddInternalReq", "InternalReq") + "')}";
+                               
+                           }).GetHtml()
+						</div>
+                    </div>
+                </fieldset>
+            }
+         

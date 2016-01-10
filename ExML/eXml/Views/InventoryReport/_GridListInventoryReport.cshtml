@@ -1,0 +1,81 @@
+﻿@{ 
+var grid = Html.DevExpress().GridView(
+       settings =>
+       {
+           settings.Name = "gvInventoryRep";
+           settings.CallbackRouteValues = new { Controller = "InventoryReport", Action = "_GridListInventoryReport" };
+           settings.ClientSideEvents.BeginCallback = @"function(s, e) { SetGridCustomArgs(s,e) }";
+           settings.KeyFieldName = "Id";
+           settings.Width = Unit.Percentage(100);
+           settings.Height = 400;
+
+           //settings.Settings.HorizontalScrollBarMode = ScrollBarMode.Visible;
+           settings.Settings.VerticalScrollBarMode = ScrollBarMode.Visible;
+           //settings.SettingsBehavior.AllowSelectSingleRowOnly = true;
+           settings.SettingsBehavior.AllowFocusedRow = true;
+           //settings.SettingsBehavior.AllowSelectSingleRowOnly = true;
+          
+
+           //settings.Columns.Add(columnCheckNullable =>
+           //{
+           //    columnCheckNullable.FieldName = "#";
+           //    columnCheckNullable.ColumnType = MVCxGridViewColumnType.CheckBox;
+           //    columnCheckNullable.UnboundType = DevExpress.Data.UnboundColumnType.Boolean;
+           //    columnCheckNullable.Width = 30;
+               
+           //});
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "AssemblyName";
+               column.Caption = "Assembly";
+               column.Width = 100;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "UnitName";
+               column.Caption = "Unit";
+               column.Width = 80;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "YrWk";
+               column.Caption = "Year-Week";
+               column.Width = 100;
+           });
+
+           //settings.Columns.Add(column =>
+           //    {
+           //        column.FieldName = "InvoiceNo";
+           //        column.Width = 70;
+           //    });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "Consultant";
+               column.Caption = "Consultant Name /Code";
+               column.Width = 240;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "Item";
+               column.Width = 240;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "QtyReceived";
+               column.Width = 100;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "QtySold";
+               column.Width = 100;
+           });
+           settings.Columns.Add(column =>
+           {
+               column.FieldName = "Status";
+               column.Caption = "Inventory Status";
+               column.Width = 120;
+           });
+   
+       });
+    }
+    @grid.Bind(Model).GetHtml()

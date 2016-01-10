@@ -1,0 +1,83 @@
+﻿@*@{ Layout = "~/Views/Shared/_lightLayout.cshtml"; }*@
+@using eXml.Models;
+@using eXml.Entities;
+@model IList<ListInvoiceTransModel>
+    <script type="text/javascript">
+        var selectedIDs;
+        function OnSelectionChanged(s, e) {
+            s.GetSelectedFieldValues("Id", GetSelectedFieldValuesCallback);
+        }
+        function GetSelectedFieldValuesCallback(values) {
+            selectedIDs = "";
+            for (var index = 0; index < values.length; index++) {
+                selectedIDs += values[index] + ",";
+            }
+            if (selectedIDs.length > 0)
+                selectedIDs = selectedIDs.substring(0, selectedIDs.length - 1);
+        }
+        function OnSubmitClick(ajaxPostUrl) {
+           
+            if (selectedIDs != null) {
+                $.post(ajaxPostUrl,
+                    {
+                        selectedIDsHF: selectedIDs
+                    },
+                    function (response) {
+                        if (response == 1) {
+                            alert("Bulk payment updated successfully!");
+                            gvInv.Refresh();
+                        }
+                        else {
+                            alert("An error occured while bulk uploading!");
+                        }
+                    }
+                );
+            }
+            else {
+                alert("No single transaction has been marked for bulk payment update ");
+            }
+        }
+        function FilterGrid(ajaxPostUrl) {
+            gvInv.Refresh();
+        }
+        function SetGridCustomArgs(s, e) {
+            e.customArgs['assembly'] = assembly.GetValue();
+            e.customArgs['unit'] = unit.GetValue();
+            e.customArgs['datefrom'] = $("#invoice-start-date").val();
+            e.customArgs['dateto'] = $("#invoice-end-date").val();
+        }
+        function unitInit(s, e) {
+            s.InsertItem(0, ["ALL", "ALL"]);
+            s.SetValue("ALL");
+        }
+        function assemblyInit(s, e) {
+            s.InsertItem(0, ["ALL", "ALL"]);
+            s.SetValue("ALL");
+
+            var dateFrom = Date.today().add(-1).days();
+            var dateTo = Date.today();
+
+            $("#invoice-end-date").val(dateTo.toString('yyyy-MM-dd'));
+            $("#invoice-start-date").val(dateFrom.toString('yyyy-MM-dd'));
+        }
+
+</script>
+
+<div class ="container" >
+    <div class="row">
+        <div class="span5 col-md-6" style="float:right";>
+                @Html.Partial("_paymentPartial")
+            </div>
+            <div class="span5 col-md-6" >
+                @Html.Partial("_invoicePartial")  
+           </div>
+    </div>
+    
+</div>
+  <div class ="content">
+       <div  id ="grid">
+           @using (Html.BeginForm()){
+            @Html.Partial("_GridListInvoices",Model)
+           }
+       </div>
+   </div>

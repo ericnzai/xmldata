@@ -1,0 +1,54 @@
+﻿@model eXml.Models.LoginModel
+<div class="container">
+<fieldset ><legend  style="font-size:20px; margin-left:30px;">Enter Login Info</legend>
+@*<div class="accountHeader">
+    <h2>class="pull-left"
+        Log In</h2>
+    <p>
+        Please enter your username and password. </p>
+</div>*@
+<div>
+    @if (ViewData["ErrorMsg"] != null)
+    {
+        <p><span style="color:red;">@ViewData["ErrorMsg"]</span> </p>
+    }
+</div>
+@using(Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+    
+    @Html.DevExpress().Label(settings => {
+        settings.Name = "EmailLabel";
+        settings.Text = "Email:";
+        //settings.AssociatedControlName = "UserName";
+    }).GetHtml()
+
+    <div class="form-field">
+        @Html.EditorFor(m => m.Email)
+        @Html.ValidationMessageFor(m => m.Email)
+    </div>
+
+    @Html.DevExpress().Label(settings => {
+        settings.Name = "PasswordLabel";
+        settings.Text = "Password";
+        //settings.AssociatedControlName = "Password";
+    }).GetHtml()
+    <div class="form-field">
+        @Html.EditorFor(m => m.Password)
+        @Html.ValidationMessageFor(m => m.Password)
+    </div>@*
+
+    <div class="form-field">
+        @Html.DevExpress().CheckBox(settings => {
+            settings.Name = "RememberMe";
+            settings.Text = "Remember me?";
+        }).GetHtml()
+    </div>*@
+
+    @Html.DevExpress().Button(settings => {
+        settings.Name = "Button";
+        settings.Text = "Log In";
+        settings.UseSubmitBehavior = true;
+    }).GetHtml()
+}
+</fieldset>
+    </div>

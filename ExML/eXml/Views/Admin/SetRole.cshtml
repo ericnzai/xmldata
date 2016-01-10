@@ -1,0 +1,37 @@
+﻿@model eXml.Models.RolesCheckBoxListEditModel
+@using eXml.Models
+  
+<div class ="container">
+    @using (Html.BeginForm())
+    {
+    if (ViewData["Message"] != null)
+    {
+        <span style="color:green"> @ViewData["Message"]</span>
+    }
+     <div>
+        @Html.HiddenFor( model => model.Id)
+        @Html.LabelFor(model => model.RoleIds)
+    </div>
+     @Html.CheckBoxList("RoleIds",Model.Roles,"Set User Roles")
+     <table>
+        <tr>
+            <td>
+            @Html.DevExpress().Button(settings => {
+                settings.Name = "Button";
+                settings.Text = "Save";
+                settings.UseSubmitBehavior = true;
+             }).GetHtml()
+            </td>
+            <td>
+            @Html.DevExpress().Button(
+            settings => {
+                settings.Name = "btnCancel";
+                settings.ControlStyle.CssClass = "button";
+                settings.Text = "Cancel";
+                settings.ClientSideEvents.Click = "function(s, e){ document.location='" + DevExpressHelper.GetUrl(new { Controller = "Admin", Action = "Users"  }) + "'; }";
+            }).GetHtml()
+            </td>
+        </tr>
+   </table>
+    }
+</div>

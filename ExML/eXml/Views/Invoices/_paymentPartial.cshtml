@@ -1,0 +1,36 @@
+﻿
+                <fieldset>
+                    <legend align="center" class="pull-left" style="font-size:20px;">Payment Updates</legend>
+               @* @Html.Hidden("selectedIDsHF")*@
+                <div class="control-group">  
+						<label class="control-label" for="payment-date">Payment Date</label>  
+						<div class="controls">
+							<input type="text" style="width:80px" data-date-format="yyyy-mm-dd" data-provide="datepicker" name="payment-date" id="payment-date" required="true" value="2015-10-08">
+						</div>
+					</div>
+                <div class="control-group">  
+						<label class="control-label" for="invoice_bank_bulk">Bank Name</label>  
+						<div class="controls">
+							<input type="text" name="invoice_bank_bulk" id="invoice_bank_bulk" style="width:300px">
+						</div>
+					</div>
+                <div class="control-group">  
+						<label class="control-label" for="invoice_cheque_no_bulk">Cheque No</label>  
+						<div class="controls">
+							<input type="text" name="invoice_cheque_no_bulk" id="invoice_cheque_no_bulk" style="width:120px">
+							&nbsp;&nbsp;
+                            @*@using(Html.BeginForm("PaymentBulk", "Invoices")) {*@
+                           @* @Html.Hidden("selectedIDsHF");*@
+                            @Html.DevExpress().Button(settings => {
+                                settings.Name = "btnSubmit";
+                                settings.Text = "Submit Form";
+                                settings.UseSubmitBehavior = true;
+                                settings.ClientSideEvents.Click = " function(s, e) { OnSubmitClick('" + @Url.Action("PaymentBulk", "Invoices") + "')}";
+                                //settings.ClientSideEvents.Click = "OnSubmitClick";
+                            }).GetHtml()
+                           @* }*@
+							@*<button class="btn btn-small btn-primary" type="button" name="Update" id="paymentBulkFormSubmit">Update</button>*@
+						</div>
+					</div>
+              </fieldset>
+           

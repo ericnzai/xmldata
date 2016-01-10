@@ -1,0 +1,79 @@
+﻿@using eXml.Entities
+
+<div id="Panel" class ="container">
+    <div class="">
+@*<h2>Upload Excel File</h2>*@
+@model eXml.Models.UploadFileModel
+@using (Html.BeginForm("UploadFile", "UploadControl", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.Partial("LoadingPartial")
+     <fieldset>
+        <legend class="pull-left" style="font-size:20px; margin-left:30px;">XML 2 TALLY</legend>
+         <div class ="control-group">
+             <label class="control-label" for="company">Company Name</label>  
+             <div class="controls">
+                 @Html.TextBoxFor(m => m.Company, new { @class = "input-xlarge", @required="true" })
+             </div>
+         </div>
+         <div class="control-group">
+             <label class="control-label" for="fileInput">File to process</label>  
+             <div class="controls">  
+	            <input class="input-file" id="file" type="file" required="true" name="file">  
+	          </div>  
+         </div>
+         <div class="control-group">  
+		    <label class="control-label" for="date">Date</label>  
+		    <div class="controls">  
+		      	@Html.TextBoxFor(m => m.Date, new { @class = "input-xlarge", @required="true",id = "date" })
+		      	<p class="help-block">Format YYYYMMDD</p>  
+		    </div>  
+	    </div>
+         <div class="control-group">  
+		    <label class="control-label" for="type">Type</label>  
+		    <div class="controls">  
+           
+                @Html.DevExpress().ComboBox(settings =>
+               {
+                   settings.Name = "Type";
+                   settings.Width = 284;
+                   //settings.SelectedIndex = 0;
+                   settings.ShowModelErrors = true;
+                   settings.Properties.NullText = "Select Type";
+                   settings.CallbackRouteValues = new { Controller = "UploadControl", Action = "UploadFile" };
+                   settings.Properties.CallbackPageSize = 15;
+                   settings.Properties.TextField = "Value";
+                   settings.Properties.ValueField = "Key";
+                   settings.Properties.ValueType = typeof(int);
+
+               }).BindList(ViewData["type"]).GetHtml()
+        </div>
+        
+        <div class="control-group">  
+		<label class="control-label" for=""></label>  
+		<div  class="controls">  
+			<button class="btn btn-small btn-primary" type="submit" name="Generate" onclick="LoadingPanel.Show();">Get XML</button>
+		</div>  
+		</div>
+   </fieldset>
+    
+    if (ViewData["Msg"] != null)
+    {
+        <p class="help-block"><span style="color:green;"> @ViewData["Msg"].ToString() </span><br />
+        </p> 
+        
+ }
+    if (ViewData["MsgError"] != null)
+    {
+        <p class="help-block"><span style="color:red;"> @ViewData["MsgError"].ToString() </span><br />
+        </p> 
+    }
+     @Html.DevExpress().LoadingPanel(
+        settings => {
+            settings.Name = "LoadingPanel";
+            settings.Modal = true;
+            settings.ContainerElementID ="Panel";
+        }
+    ).GetHtml()
+}
+        </div>
+</div>

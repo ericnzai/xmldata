@@ -1,0 +1,75 @@
+﻿@using eXml.Models;
+@using eXml.Entities;
+@model List<ListInventoryReportModel>
+<script type="text/javascript">
+        function FilterGrid() {
+            var dateInvFrom = $("#invoice-start-date").val();
+            var dateInvTo = $("#invoice-end-date").val();
+
+            if (dateInvFrom <= dateInvTo) {
+                gvInventoryRep.Refresh();
+            } else {
+                alert('Invoice date from is greater than invoice date to! Rectify then proceed..!');
+                return false;
+            }
+        }
+        function SetGridCustomArgs(s, e) {
+            //$("#invoice-end-date").datepicker("setDate", new Date());
+            //var date1 = new Date();
+            //date1.setMonth(date1.getMonth() - 1);
+            //$("#invoice-start-date").datepicker("setDate", date1);
+
+            e.customArgs['assembly'] = assembly.GetValue();
+            e.customArgs['unit'] = unit.GetValue();
+            e.customArgs['consultant'] = consultant.GetValue();
+            e.customArgs['status'] = invStatus.GetValue();
+            e.customArgs['item'] = item.GetValue();
+            e.customArgs['datefrom'] = $("#invoice-start-date").val();
+            e.customArgs['dateto'] = $("#invoice-end-date").val();
+        }
+        function assemblyInit(s, e) {
+            s.InsertItem(0, ["ALL", "ALL"]);
+            s.SetValue("ALL");
+
+            var dateFrom = Date.today().add(-1).days();
+            var dateTo = Date.today();
+
+            $("#invoice-end-date").val(dateTo.toString('yyyy-MM-dd'));
+            $("#invoice-start-date").val(dateFrom.toString('yyyy-MM-dd'));
+        }
+        function unitInit(s, e) {
+            s.InsertItem(0, ["ALL", "ALL"]);
+            //s.SelectedIndex = 0;
+            s.SetValue("ALL");
+
+        }
+        function consultantInit(s, e) {
+            s.InsertItem(0, ["ALL", "ALL"]);
+            //s.SelectedIndex = 0;
+            s.SetValue("ALL");
+        }
+        function invStatusInit(s, e) {
+            s.InsertItem(0, ["ALL", "ALL"]);
+            //s.SelectedIndex = 0;
+            s.SetValue("ALL");
+        }
+        function itemInit(s, e) {
+            s.InsertItem(0, ["ALL", "ALL"]);
+            //s.SelectedIndex = 0;
+            s.SetValue("ALL");
+        }
+
+</script>
+
+<div class="container">
+    <div>
+        @Html.Partial("_inventoryReportPartial")
+    </div>
+</div>
+  <div class ="content">
+       <div  id ="grid">
+           @using (Html.BeginForm()){
+            @Html.Partial("_GridListInventoryReport",Model)
+           }
+       </div>
+   </div>
